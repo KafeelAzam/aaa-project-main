@@ -1,0 +1,378 @@
+<!-- 
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Sorting Algorithms</title>
+  </head>
+  <body>
+    <h1>Sorting Algorithms</h1>
+    <input id="arr" type="text" placeholder="Enter array (e.g. 1,2,3,4,5)">
+    <button id="sort-btn">Sort</button>
+    <div id="result"></div>
+
+    <script>
+      const sortBtn = document.getElementById('sort-btn');
+      sortBtn.addEventListener('click', async () => {
+        const arrInput = document.getElementById('arr');
+        const arr = arrInput.value.split(',').map(Number);
+
+        try {
+          const response = await fetch('/sort', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ arr }),
+          });
+
+          const times = await response.json();
+          const resultDiv = document.getElementById('result');
+          resultDiv.innerHTML = `
+            <p>Merge Sort: ${times["Merge Sort"]} seconds</p>
+            <p>Bubble Sort: ${times["Bubble Sort"]} seconds</p>
+            <p>Quick Sort: ${times["Quick Sort"]} seconds</p>
+          `;
+        } catch (error) {
+          console.error(error);
+        }
+      });
+    </script>
+  </body>
+</html> -->
+
+<!-- 
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Search Algorithms</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+    }
+  </style>
+</head>
+<body>
+  <h1>Search Algorithms</h1>
+  <form id="search-form">
+    <label for="arr">Array:</label>
+    <input type="text" id="arr" name="arr"><br><br>
+    <label for="target">Target:</label>
+    <input type="text" id="target" name="target"><br><br>
+    <button type="submit">Search</button>
+  </form>
+  <div id="results"></div>
+
+  <script>
+    // Linear Search
+    function linearSearch(arr, target) {
+      for (let i = 0; i < arr.length; i++) {
+        if (arr[i] === target) {
+          return i;
+        }
+      }
+      return -1;
+    }
+
+    // Binary Search
+    function binarySearch(arr, target) {
+      arr.sort((a, b) => a - b); // Ensure the array is sorted before performing binary search
+      let low = 0;
+      let high = arr.length - 1;
+      while (low <= high) {
+        const mid = Math.floor((low + high) / 2);
+        if (arr[mid] < target) {
+          low = mid + 1;
+        } else if (arr[mid] > target) {
+          high = mid - 1;
+        } else {
+          return mid;
+        }
+      }
+      return -1;
+    }
+
+    // Hash Table (Object) Search
+    function hashTableSearch(arr, target) {
+      const hashTable = {};
+      for (let i = 0; i < arr.length; i++) {
+        hashTable[arr[i]] = i;
+      }
+      return hashTable[target] || -1;
+    }
+
+    // Measure Time
+    function measureTime(searchFunc, arr, target) {
+      const startTime = performance.now();
+      searchFunc(arr, target);
+      return performance.now() - startTime;
+    }
+
+    const form = document.getElementById('search-form');
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const arr = document.getElementById('arr').value.split(',');
+      const target = document.getElementById('target').value;
+      
+      // Measure times
+      const times = {};
+      times["Linear Search"] = measureTime(linearSearch, arr.map(Number), Number(target));
+      times["Binary Search"] = measureTime(binarySearch, arr.map(Number), Number(target));
+      times["Hash Table Search"] = measureTime(hashTableSearch, arr.map(Number), Number(target));
+
+      const resultsDiv = document.getElementById('results');
+      resultsDiv.innerHTML = '';
+      Object.keys(times).forEach((key) => {
+        const paragraph = document.createElement('p');
+        paragraph.textContent = `${key}: ${times[key]}ms`;
+        resultsDiv.appendChild(paragraph);
+      });
+    });
+  </script>
+</body>
+</html> -->
+
+<!-- <!DOCTYPE html>
+<html>
+<head>
+  <title>Search Algorithms</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+    }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <h1>Search Algorithms</h1>
+  <form id="search-form">
+    <label for="arr">Array:</label>
+    <input type="text" id="arr" name="arr"><br><br>
+    <label for="target">Target:</label>
+    <input type="text" id="target" name="target"><br><br>
+    <button type="submit">Search</button>
+  </form>
+  <div id="results"></div>
+  <canvas id="myChart"></canvas>
+
+  <script>
+    // Linear Search
+    function linearSearch(arr, target) {
+      for (let i = 0; i < arr.length; i++) {
+        if (arr[i] === target) {
+          return i;
+        }
+      }
+      return -1;
+    }
+
+    // Binary Search
+    function binarySearch(arr, target) {
+      arr.sort((a, b) => a - b); // Ensure the array is sorted before performing binary search
+      let low = 0;
+      let high = arr.length - 1;
+      while (low <= high) {
+        const mid = Math.floor((low + high) / 2);
+        if (arr[mid] < target) {
+          low = mid + 1;
+        } else if (arr[mid] > target) {
+          high = mid - 1;
+        } else {
+          return mid;
+        }
+      }
+      return -1;
+    }
+
+    // Hash Table (Object) Search
+    function hashTableSearch(arr, target) {
+      const hashTable = {};
+      for (let i = 0; i < arr.length; i++) {
+        hashTable[arr[i]] = i;
+      }
+      return hashTable[target] || -1;
+    }
+
+    // Measure Time
+    function measureTime(searchFunc, arr, target) {
+      const startTime = performance.now();
+      searchFunc(arr, target);
+      return performance.now() - startTime;
+    }
+
+    const form = document.getElementById('search-form');
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const arr = document.getElementById('arr').value.split(',').map(Number);
+      const target = Number(document.getElementById('target').value);
+      
+      // Measure times
+      const times = {};
+      times["Linear Search"] = measureTime(linearSearch, arr, target);
+      times["Binary Search"] = measureTime(binarySearch, arr, target);
+      times["Hash Table Search"] = measureTime(hashTableSearch, arr, target);
+
+      const resultsDiv = document.getElementById('results');
+      resultsDiv.innerHTML = '';
+      Object.keys(times).forEach((key) => {
+        const paragraph = document.createElement('p');
+        paragraph.textContent = `${key}: ${times[key]}ms`;
+        resultsDiv.appendChild(paragraph);
+      });
+
+      // Create graph
+      const ctx = document.getElementById('myChart').getContext('2d');
+      const myChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: Object.keys(times),
+          datasets: [{
+            label: 'Execution Time (ms)',
+            data: Object.values(times),
+            backgroundColor: [
+              'rgba(255, 99, 132, 0.2)',
+              'rgba(54, 162, 235, 0.2)',
+              'rgba(255, 206, 86, 0.2)'
+            ],
+            borderColor: [
+              'rgba(255, 99, 132, 1)',
+              'rgba(54, 162, 235, 1)',
+              'rgba(255, 206, 86, 1)'
+            ],
+            borderWidth: 1
+          }]
+        },
+        options: {
+          scales: {
+            y: {
+              beginAtZero: true
+            }
+          }
+        }
+      });
+    });
+  </script>
+</body>
+</html> -->
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Search Algorithms</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+    }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <h1>Search Algorithms</h1>
+  <form id="search-form">
+    <label for="arr">Array:</label>
+    <input type="text" id="arr" name="arr"><br><br>
+    <label for="target">Target:</label>
+    <input type="text" id="target" name="target"><br><br>
+    <button type="submit">Search</button>
+  </form>
+  <div id="results"></div>
+  <canvas id="myChart"></canvas>
+
+  <script>
+    // Linear Search
+    function linearSearch(arr, target) {
+      for (let i = 0; i < arr.length; i++) {
+        if (arr[i] === target) {
+          return i;
+        }
+      }
+      return -1;
+    }
+
+    // Binary Search
+    function binarySearch(arr, target) {
+      arr.sort((a, b) => a - b); // Ensure the array is sorted before performing binary search
+      let low = 0;
+      let high = arr.length - 1;
+      while (low <= high) {
+        const mid = Math.floor((low + high) / 2);
+        if (arr[mid] < target) {
+          low = mid + 1;
+        } else if (arr[mid] > target) {
+          high = mid - 1;
+        } else {
+          return mid;
+        }
+      }
+      return -1;
+    }
+
+    // Hash Table (Object) Search
+    function hashTableSearch(arr, target) {
+      const hashTable = {};
+      for (let i = 0; i < arr.length; i++) {
+        hashTable[arr[i]] = i;
+      }
+      return hashTable[target] || -1;
+    }
+
+    // Measure Time
+    function measureTime(searchFunc, arr, target) {
+      const startTime = performance.now();
+      for (let i = 0; i < 1000; i++) {
+        searchFunc(arr, target);
+      }
+      return (performance.now() - startTime) / 1000;
+    }
+
+    const form = document.getElementById('search-form');
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const arr = document.getElementById('arr').value.split(',').map(Number);
+      const target = Number(document.getElementById('target').value);
+      
+      // Measure times
+      const times = {};
+      times["Linear Search"] = measureTime(linearSearch, arr, target);
+      times["Binary Search"] = measureTime(binarySearch, arr, target);
+      times["Hash Table Search"] = measureTime(hashTableSearch, arr, target);
+
+      const resultsDiv = document.getElementById('results');
+      resultsDiv.innerHTML = '';
+      Object.keys(times).forEach((key) => {
+        const paragraph = document.createElement('p');
+        paragraph.textContent = `${key}: ${times[key]}ms`;
+        resultsDiv.appendChild(paragraph);
+      });
+
+      // Create graph
+      const ctx = document.getElementById('myChart').getContext('2d');
+      const myChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: Object.keys(times),
+          datasets: [{
+            label: 'Execution Time (ms)',
+            data: Object.values(times),
+            backgroundColor: [
+              'rgba(255, 99, 132, 0.2)',
+              'rgba(54, 162, 235, 0.2)',
+              'rgba(255, 206, 86, 0.2)'
+            ],
+            borderColor: [
+              'rgba(255, 99, 132, 1)',
+              'rgba(54, 162, 235, 1)',
+              'rgba(255, 206, 86, 1)'
+            ],
+            borderWidth: 1
+          }]
+        },
+        options: {
+          scales: {
+            y: {
+              beginAtZero: true
+            }
+          }
+        }
+      });
+    });
+  </script>
+</body>
+</html>
